@@ -1,9 +1,11 @@
 variable "google_region" {
   description = "Defines GCE region"
-  value       = "us-central1"
+  type        = "string"
+  default     = "us-central1"
 }
 
 variable "google_zone" {
   description = "Defines GCE zone"
-  value       = "us-central1-a"
+  type        = "string"
+  default     = "us-central1-a"
 }
