@@ -1,1 +1,28 @@
 # This is a step-by-step guid for how the configuration was built
+
+- Define the provider that is going to be used:
+```provider "google" {
+    credentials = "${file(/home/test/creds.json)}"
+    project = "test-proj-241215"
+    region = "${var.google_region}"
+
+}
+```
+- Define a ```random_pet``` resource, that is going to be used to generate the srv names:
+
+```
+resource "random_pet" "srv_name" {
+    length = 4
+    prefix = "srv-"
+
+}
+```
+- Define ```random_pet``` resource that is going to be used to generate names of other than servers resources:
+```
+resource "random_pet" "other_resource" {
+    length = 10
+    prefix = "other-"
+
+}
+````
+
