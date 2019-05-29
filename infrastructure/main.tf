@@ -13,7 +13,7 @@ module "basic_server" {
 
   network_name   = "${google_compute_network.srv_net_1.name}"
   google_zone    = "${var.google_zone}"
-  instance_count = "4"
+  instance_count = "1"
 }
 
 # Define a random_pet provider that will generate names for other than server resources

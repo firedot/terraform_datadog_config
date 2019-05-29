@@ -10,6 +10,27 @@ resource "google_compute_instance" "server" {
   zone         = "${var.google_zone}"
   tags         = ["first-machine", "testing"]
 
+  provisioner "file" {
+    source      = "./scripts/datadog_install.sh"
+    destination = "/tmp/datadog_install.sh"
+
+    connection {
+      type        = "ssh"
+      user        = "root"
+      private_key = "${file("/root/.ssh/gcp_key")}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    inline = ["bash /tmp/datadog_install.sh"]
+  }
+
+  connection {
+    type        = "ssh"
+    user        = "root"
+    private_key = "${file("/root/.ssh/gcp_key")}"
+  }
+
   boot_disk = {
     initialize_params {
       image = "ubuntu-1810-cosmic-v20190514"
