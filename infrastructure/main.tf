@@ -34,11 +34,26 @@ resource "google_compute_instance" "server_1" {
 
   network_interface {
     network = "${google_compute_network.srv_net_1.name}"
+
+    access_config {
+      #Ephemeral IP
+    }
   }
 
   depends_on = ["google_compute_network.srv_net_1"]
 }
 
 resource "google_compute_network" "srv_net_1" {
-  name = "${random_pet.other_resource.id}"
+  name                    = "${random_pet.other_resource.id}"
+  auto_create_subnetworks = true
+}
+
+resource "google_compute_firewall" "firewall-1" {
+  name    = "${random_pet.other_resource.id}"
+  network = "${google_compute_network.srv_net_1.name}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "22"]
+  }
 }
