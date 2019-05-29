@@ -1,4 +1,18 @@
-# This is a step-by-step guid for how the configuration was built
+# This is a step-by-step guid for how the configuration was built:
+
+- Generate a ssh key pari that you are going to use for accessing your machines:
+```
+ssh-keygen
+```
+- Add the public key generated to GCP: 
+  - Go to [GCP Console](https://console.cloud.google.com)
+  - Select your project from the drop-down menu on the top of the console
+  - Navigate to ```Compute engine```
+  - Go to "MetaData"
+  - Go to "SSH Keys"
+  - Click on ```Edit```
+  - Click on ```Add Item```
+  - Paste the public key from the private/public key pair that you generated
 
 - Define the provider that is going to be used:
 ```provider "google" {
@@ -88,4 +102,8 @@ output "google_compute_instance server_1  External_IP" {
 }
 
 ```
-
+- Prepare for DataDog agent installation:
+  - export the DataDog API key as bash environment variable:
+  ```
+  export datadog_api_key='<your_DataDog_API_key_goes_here'
+  ```
