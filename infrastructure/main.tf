@@ -8,14 +8,14 @@ provider "google" {
 
 # Define a random_pet provider that will generate names for server resources
 resource "random_pet" "srv_name" {
-  length = 4
-  prefix = "srv-"
+  length = 1
+  prefix = "srv"
 }
 
 # Define a random_pet provider that will generate names for other than server resources
 resource "random_pet" "other_resource" {
-  length = 10
-  prefix = "other-"
+  length = 2
+  prefix = "other"
 }
 
 # Create the first Google Compute Instance
@@ -33,6 +33,12 @@ resource "google_compute_instance" "server_1" {
   }
 
   network_interface {
-    network = "default"
+    network = "${google_compute_network.srv_net_1.name}"
   }
+
+  depends_on = ["google_compute_network.srv_net_1"]
+}
+
+resource "google_compute_network" "srv_net_1" {
+  name = "${random_pet.other_resource.id}"
 }
