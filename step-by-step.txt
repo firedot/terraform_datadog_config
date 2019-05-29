@@ -26,7 +26,7 @@ resource "random_pet" "other_resource" {
 }
 ````
 
-- Create a ```google_compute_instance``` resource:
+- Create a ```google_compute_instance``` resource with Ephemeral IP:
 
 ```
 resource "google_compute_instance" "server_1" {
@@ -45,18 +45,46 @@ resource "google_compute_instance" "server_1" {
 
       network_interface {
               network = "default"
-                
+      access_config {
+      #Ephemeral IP
+    }
       }
+
+  depends_on = ["google_compute_network.srv_net_1"]
 
 }
 ```
+- Create a network that the VM instance is going to use:
 
-- Create ```outputs.tf``` that will show the name of the created instance
+```
+resource "google_compute_network" "srv_net_1" {
+  name                    = "${random_pet.other_resource.id}"
+  auto_create_subnetworks = true
+}
+```
+- Create a firewall rule that will allow certain types of traffic:
+
+```
+resource "google_compute_firewall" "firewall-1" {
+  name    = "${random_pet.other_resource.id}"
+  network = "${google_compute_network.srv_net_1.name}"
+
+  allow {
+    protocol = "tcp"
+    ports    = ["80", "8080", "22"]
+  }
+}
+```
+- Create ```outputs.tf``` and enter the outputs that you want to see in more accessible manner:
 
 ```
 output "google_compute_instance server_1 name " {
       value = "${google_compute_instance.server_1.name}"
 
+}
+
+output "google_compute_instance server_1  External_IP" {
+  value = "${google_compute_instance.server_1.network_interface.0.access_config.0.nat_ip}"
 }
 
 ```
